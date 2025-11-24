@@ -1,0 +1,259 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": []
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "code",
+      "execution_count": 1,
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 597
+        },
+        "collapsed": true,
+        "id": "tIALlHpvckHd",
+        "outputId": "732e6c14-dbc6-40af-acd1-42c0975024b8"
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Collecting numpy<2.0,>=1.26\n",
+            "  Downloading numpy-1.26.4-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (61 kB)\n",
+            "\u001b[?25l     \u001b[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\u001b[0m \u001b[32m0.0/61.0 kB\u001b[0m \u001b[31m?\u001b[0m eta \u001b[36m-:--:--\u001b[0m\r\u001b[2K     \u001b[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\u001b[0m \u001b[32m61.0/61.0 kB\u001b[0m \u001b[31m4.6 MB/s\u001b[0m eta \u001b[36m0:00:00\u001b[0m\n",
+            "\u001b[?25hRequirement already satisfied: pandas<3.0,>=2.1 in /usr/local/lib/python3.12/dist-packages (2.2.2)\n",
+            "Requirement already satisfied: openpyxl<4.0,>=3.1 in /usr/local/lib/python3.12/dist-packages (3.1.5)\n",
+            "Requirement already satisfied: python-dateutil>=2.8.2 in /usr/local/lib/python3.12/dist-packages (from pandas<3.0,>=2.1) (2.9.0.post0)\n",
+            "Requirement already satisfied: pytz>=2020.1 in /usr/local/lib/python3.12/dist-packages (from pandas<3.0,>=2.1) (2025.2)\n",
+            "Requirement already satisfied: tzdata>=2022.7 in /usr/local/lib/python3.12/dist-packages (from pandas<3.0,>=2.1) (2025.2)\n",
+            "Requirement already satisfied: et-xmlfile in /usr/local/lib/python3.12/dist-packages (from openpyxl<4.0,>=3.1) (2.0.0)\n",
+            "Requirement already satisfied: six>=1.5 in /usr/local/lib/python3.12/dist-packages (from python-dateutil>=2.8.2->pandas<3.0,>=2.1) (1.17.0)\n",
+            "Downloading numpy-1.26.4-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (18.0 MB)\n",
+            "\u001b[2K   \u001b[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\u001b[0m \u001b[32m18.0/18.0 MB\u001b[0m \u001b[31m36.3 MB/s\u001b[0m eta \u001b[36m0:00:00\u001b[0m\n",
+            "\u001b[?25hInstalling collected packages: numpy\n",
+            "  Attempting uninstall: numpy\n",
+            "    Found existing installation: numpy 2.0.2\n",
+            "    Uninstalling numpy-2.0.2:\n",
+            "      Successfully uninstalled numpy-2.0.2\n",
+            "\u001b[31mERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.\n",
+            "opencv-python 4.12.0.88 requires numpy<2.3.0,>=2; python_version >= \"3.9\", but you have numpy 1.26.4 which is incompatible.\n",
+            "jax 0.7.2 requires numpy>=2.0, but you have numpy 1.26.4 which is incompatible.\n",
+            "opencv-contrib-python 4.12.0.88 requires numpy<2.3.0,>=2; python_version >= \"3.9\", but you have numpy 1.26.4 which is incompatible.\n",
+            "pytensor 2.35.1 requires numpy>=2.0, but you have numpy 1.26.4 which is incompatible.\n",
+            "jaxlib 0.7.2 requires numpy>=2.0, but you have numpy 1.26.4 which is incompatible.\n",
+            "opencv-python-headless 4.12.0.88 requires numpy<2.3.0,>=2; python_version >= \"3.9\", but you have numpy 1.26.4 which is incompatible.\n",
+            "shap 0.50.0 requires numpy>=2, but you have numpy 1.26.4 which is incompatible.\u001b[0m\u001b[31m\n",
+            "\u001b[0mSuccessfully installed numpy-1.26.4\n"
+          ]
+        },
+        {
+          "output_type": "display_data",
+          "data": {
+            "application/vnd.colab-display-data+json": {
+              "pip_warning": {
+                "packages": [
+                  "numpy"
+                ]
+              },
+              "id": "abe64d94e3614113bc86cb7fa12e95df"
+            }
+          },
+          "metadata": {}
+        }
+      ],
+      "source": [
+        "!pip install \"numpy>=1.26,<2.0\" \"pandas>=2.1,<3.0\" \"openpyxl>=3.1,<4.0\""
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# -*- coding: utf-8 -*-\n",
+        "# Google Colab 上で「請求書_YYYYMMDD.xlsx」を新規作成するコード\n",
+        "\n",
+        "from datetime import datetime\n",
+        "from openpyxl import Workbook\n",
+        "from openpyxl.styles import Alignment, Font, Border, Side\n",
+        "from openpyxl.utils import get_column_letter\n",
+        "\n",
+        "# =========================\n",
+        "# 1. 日付・ファイル名の準備\n",
+        "# =========================\n",
+        "today = datetime.now()\n",
+        "date_str_for_cell = today.strftime(\"%Y/%m/%d\")   # 例: 2023/06/06\n",
+        "date_str_for_filename = today.strftime(\"%Y%m%d\") # 例: 20230606\n",
+        "\n",
+        "filename = f\"請求書_{date_str_for_filename}.xlsx\"\n",
+        "\n",
+        "# =========================\n",
+        "# 2. ワークブック・シート作成\n",
+        "# =========================\n",
+        "wb = Workbook()\n",
+        "ws = wb.active\n",
+        "ws.title = \"請求書\"\n",
+        "\n",
+        "# 列幅を調整（見やすさのため）\n",
+        "col_widths = {\n",
+        "    \"A\": 4,\n",
+        "    \"B\": 18,\n",
+        "    \"C\": 12,\n",
+        "    \"D\": 6,\n",
+        "    \"E\": 8,\n",
+        "    \"F\": 10,\n",
+        "    \"G\": 12,\n",
+        "}\n",
+        "for col, w in col_widths.items():\n",
+        "    ws.column_dimensions[col].width = w\n",
+        "\n",
+        "# =========================\n",
+        "# 3. タイトル「請求書」\n",
+        "# =========================\n",
+        "ws.merge_cells(\"A2:G2\")\n",
+        "ws[\"A2\"] = \"請求書\"\n",
+        "ws[\"A2\"].font = Font(size=20, bold=True)\n",
+        "ws[\"A2\"].alignment = Alignment(horizontal=\"center\", vertical=\"center\")\n",
+        "\n",
+        "# =========================\n",
+        "# 4. 左側：会社情報（固定データ）\n",
+        "# =========================\n",
+        "ws[\"A4\"] = \"株式会社ABC\"\n",
+        "ws[\"A5\"] = \"〒101-0022 東京都千代田区神田練塀町300\"\n",
+        "ws[\"A6\"] = \"TEL:03-1234-5678 FAX:03-1234-5678\"\n",
+        "ws[\"A7\"] = \"担当者名:鈴木一郎 様\"\n",
+        "\n",
+        "# =========================\n",
+        "# 5. 右側：No. と 日付\n",
+        "# =========================\n",
+        "ws[\"F4\"] = \"No.\"\n",
+        "ws[\"G4\"] = \"0001\"\n",
+        "ws[\"F5\"] = \"日付\"\n",
+        "ws[\"G5\"] = date_str_for_cell\n",
+        "\n",
+        "# 右側を右寄せ / 中央寄せなど整形\n",
+        "ws[\"F4\"].alignment = Alignment(horizontal=\"right\")\n",
+        "ws[\"F5\"].alignment = Alignment(horizontal=\"right\")\n",
+        "ws[\"G4\"].alignment = Alignment(horizontal=\"center\")\n",
+        "ws[\"G5\"].alignment = Alignment(horizontal=\"center\")\n",
+        "\n",
+        "# =========================\n",
+        "# 6. 明細ヘッダー\n",
+        "# =========================\n",
+        "header_row = 10\n",
+        "ws[f\"B{header_row}\"] = \"商品名\"\n",
+        "ws[f\"D{header_row}\"] = \"数量\"\n",
+        "ws[f\"F{header_row}\"] = \"単価\"\n",
+        "ws[f\"G{header_row}\"] = \"金額\"\n",
+        "\n",
+        "for col in [\"B\", \"D\", \"F\", \"G\"]:\n",
+        "    cell = ws[f\"{col}{header_row}\"]\n",
+        "    cell.font = Font(bold=True)\n",
+        "    cell.alignment = Alignment(horizontal=\"center\")\n",
+        "\n",
+        "# 枠線スタイル（細線）\n",
+        "thin_border = Border(\n",
+        "    left=Side(style=\"thin\"),\n",
+        "    right=Side(style=\"thin\"),\n",
+        "    top=Side(style=\"thin\"),\n",
+        "    bottom=Side(style=\"thin\")\n",
+        ")\n",
+        "\n",
+        "# ヘッダー行に枠線\n",
+        "for col in range(2, 8):\n",
+        "    ws[f\"{get_column_letter(col)}{header_row}\"].border = thin_border\n",
+        "\n",
+        "# =========================\n",
+        "# 7. 明細データ（例：商品A / 商品B）\n",
+        "# =========================\n",
+        "data = [\n",
+        "    # 商品名, 数量, 単価\n",
+        "    (\"商品A\", 2, 10000),\n",
+        "    (\"商品B\", 1, 15000),\n",
+        "]\n",
+        "\n",
+        "start_row = header_row + 1\n",
+        "\n",
+        "for i, (name, qty, price) in enumerate(data):\n",
+        "    r = start_row + i\n",
+        "    ws[f\"B{r}\"] = name\n",
+        "    ws[f\"D{r}\"] = qty\n",
+        "    ws[f\"F{r}\"] = price\n",
+        "    ws[f\"G{r}\"] = f\"=D{r}*F{r}\"  # 金額 = 数量 × 単価\n",
+        "\n",
+        "    # 体裁調整\n",
+        "    ws[f\"B{r}\"].alignment = Alignment(horizontal=\"left\")\n",
+        "    ws[f\"D{r}\"].alignment = Alignment(horizontal=\"center\")\n",
+        "    ws[f\"F{r}\"].number_format = \"#,##0\"\n",
+        "    ws[f\"G{r}\"].number_format = \"#,##0\"\n",
+        "\n",
+        "    # 枠線\n",
+        "    for col in range(2, 8):\n",
+        "        ws[f\"{get_column_letter(col)}{r}\"].border = thin_border\n",
+        "\n",
+        "# =========================\n",
+        "# 8. 小計・消費税・税込合計\n",
+        "# =========================\n",
+        "subtotal_row = start_row + len(data) + 1  # 例: 13行目\n",
+        "tax_row      = subtotal_row + 1           # 例: 14行目\n",
+        "total_row    = subtotal_row + 2           # 例: 15行目\n",
+        "\n",
+        "# 小計\n",
+        "ws[f\"F{subtotal_row}\"] = \"小計\"\n",
+        "ws[f\"G{subtotal_row}\"] = f\"=SUM(G{start_row}:G{start_row+len(data)-1})\"\n",
+        "\n",
+        "# 消費税（10%）\n",
+        "ws[f\"F{tax_row}\"] = \"消費税\"\n",
+        "ws[f\"G{tax_row}\"] = f\"=ROUND(G{subtotal_row}*0.1,0)\"\n",
+        "\n",
+        "# 税込合計\n",
+        "ws[f\"F{total_row}\"] = \"税込合計\"\n",
+        "ws[f\"G{total_row}\"] = f\"=G{subtotal_row}+G{tax_row}\"\n",
+        "\n",
+        "for r in [subtotal_row, tax_row, total_row]:\n",
+        "    ws[f\"F{r}\"].alignment = Alignment(horizontal=\"right\")\n",
+        "    ws[f\"G{r}\"].number_format = \"#,##0\"\n",
+        "    ws[f\"F{r}\"].font = Font(bold=True)\n",
+        "    ws[f\"G{r}\"].font = Font(bold=True)\n",
+        "\n",
+        "    # 枠線\n",
+        "    for col in range(6, 8):\n",
+        "        ws[f\"{get_column_letter(col)}{r}\"].border = thin_border\n",
+        "\n",
+        "# =========================\n",
+        "# 9. 保存\n",
+        "# =========================\n",
+        "wb.save(filename)\n",
+        "print(f\"ファイルを作成しました: {filename}\")\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "StZgZWhOmTi-",
+        "outputId": "d01876ad-6eda-4616-9eea-2f08c1b76eb5"
+      },
+      "execution_count": 1,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "ファイルを作成しました: 請求書_20251124.xlsx\n"
+          ]
+        }
+      ]
+    }
+  ]
+}
