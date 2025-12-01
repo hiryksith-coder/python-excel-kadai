@@ -1,0 +1,75 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": []
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "code",
+      "source": [
+        "import pandas as pd\n",
+        "\n",
+        "# --- 1. 元データ（画像と同じ） ---\n",
+        "data = {\n",
+        "    \"日付\": [\"2023-05-17\", \"2023-05-18\", \"2023-05-19\", \"2023-05-20\", \"2023-05-21\"],\n",
+        "    \"社員名\": [\"山田\", \"佐藤\", \"鈴木\", \"田中\", \"高橋\"],\n",
+        "    \"売上\": [100, 200, 150, 300, 250],\n",
+        "    \"部門\": [\"メーカー\", \"代理店\", \"メーカー\", \"商社\", \"代理店\"]\n",
+        "}\n",
+        "\n",
+        "df = pd.DataFrame(data)\n",
+        "\n",
+        "# --- 2. 社員ごとの平均売上を算出 ---\n",
+        "avg_sales = df.groupby(\"社員名\")[\"売上\"].mean().reset_index()\n",
+        "avg_sales.columns = [\"社員名\", \"平均売上\"]\n",
+        "\n",
+        "# --- 3. 平均売上を元データに結合 ---\n",
+        "df = df.merge(avg_sales, on=\"社員名\", how=\"left\")\n",
+        "\n",
+        "# --- 4. 業績ランクを算出 ---\n",
+        "def rank(sales):\n",
+        "    if sales >= 200:\n",
+        "        return \"A\"\n",
+        "    elif sales >= 150:\n",
+        "        return \"B\"\n",
+        "    else:\n",
+        "        return \"C\"\n",
+        "\n",
+        "df[\"業績ランク\"] = df[\"平均売上\"].apply(rank)\n",
+        "\n",
+        "# --- 5. Excelファイルに書き出し ---\n",
+        "output_path = \"業績.xlsx\"\n",
+        "df.to_excel(output_path, index=False)\n",
+        "\n",
+        "print(\"Excelファイルを作成しました:\", output_path)\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "BokxcEb0gh0z",
+        "outputId": "17b5bfdb-b55b-464c-c94c-2e219ae0410f"
+      },
+      "execution_count": 2,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Excelファイルを作成しました: 業績.xlsx\n"
+          ]
+        }
+      ]
+    }
+  ]
+}
